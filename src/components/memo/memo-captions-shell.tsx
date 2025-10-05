@@ -27,6 +27,15 @@ export function MemoCaptionsShell() {
     return generated.length > 0 ? generated : DEFAULT_KEY_POINTS;
   }, [transcription]);
 
+  const chatId = useMemo(() => {
+    if (!uploadedFile) {
+      return "memo-default";
+    }
+
+    const uniqueStamp = typeof uploadedFile.lastModified === "number" ? uploadedFile.lastModified : Date.now();
+    return `${uploadedFile.name}-${uploadedFile.size}-${uniqueStamp}`;
+  }, [uploadedFile]);
+
   return (
     <HighlightContext.Provider
       value={{ highlightedTimestamp, setHighlightedTimestamp }}
@@ -78,7 +87,7 @@ export function MemoCaptionsShell() {
                     keyPoints={keyPoints}
                   />
                 </div>
-                <AIChatBot isSidebar keyPoints={keyPoints} />
+                <AIChatBot isSidebar chatId={chatId} transcription={transcription?.response.text} />
               </div>
             )}
           </div>
