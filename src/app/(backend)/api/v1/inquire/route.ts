@@ -46,16 +46,22 @@ Please answer the question based only on the information in the transcription ab
     ];
 
     // Call Cloudflare AI Llama model
-    const response = await env.AI.run(
-      "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    const aiResponse = await env.AI.run(
+      "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
       {
         messages,
       }
     );
 
+    // Extract the response text from AI response
+    const responseText =
+      typeof aiResponse === "string"
+        ? aiResponse
+        : aiResponse?.response || JSON.stringify(aiResponse);
+
     // Validate and return structured output
     const output = OutputSchema.parse({
-      response,
+      response: responseText,
     });
 
     return Response.json(output);
