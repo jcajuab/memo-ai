@@ -1,20 +1,23 @@
 {
   "name": "opennext-cloudflare-workers",
-  "type": "module",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "check": "pnpm dlx ultracite check",
-    "postcheck": "prettier --write \"**/*.{md,yaml}\" \"!**/pnpm-lock.yaml\"",
-    "fix": "pnpm dlx ultracite fix --unsafe",
     "cf:build": "opennextjs-cloudflare build",
     "cf:deploy": "opennextjs-cloudflare deploy",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
-    "postinstall": "node -e \"const {execSync} = require('child_process'); try {execSync('git --version', {stdio: 'ignore'}); require('child_process').execSync('pnpm dlx lefthook install', {stdio: 'inherit'});} catch {console.log('Skipping lefthook install: git not found');}\""
+    "check": "pnpm dlx ultracite check",
+    "postcheck": "prettier --write \"**/*.{md,yaml}\" \"!**/pnpm-lock.yaml\"",
+    "dev": "next dev --turbopack",
+    "fix": "pnpm dlx ultracite fix --unsafe",
+    "start": "next start"
+  },
+  "overrides": {
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.7.1",
@@ -45,10 +48,6 @@
     "typescript": "^5",
     "ultracite": "^5.3.2",
     "wrangler": "^4.34.0"
-  },
-  "overrides": {
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
   },
   "packageManager": "pnpm@10.18.0+sha512.e804f889f1cecc40d572db084eec3e4881739f8dec69c0ff10d2d1beff9a4e309383ba27b5b750059d7f4c149535b6cd0d2cb1ed3aeb739239a4284a68f40cfa"
 }
