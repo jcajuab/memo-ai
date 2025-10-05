@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { AudioToMp3Uploader } from "@/components/audio-to-mp3-uploader";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -41,13 +42,17 @@ export default function Page() {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
+        <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
+          <section className="rounded-2xl border border-border/60 bg-muted/40 p-6 shadow-sm">
+            <h1 className="text-2xl font-semibold">Landing Playground</h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Experiment with local audio conversions powered by FFmpeg
+              WebAssembly. Your files never leave the browser.
+            </p>
+          </section>
+          <div className="flex flex-1 items-center justify-center p-6">
+            <AudioToMp3Uploader />
           </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>
