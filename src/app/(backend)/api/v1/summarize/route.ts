@@ -1,8 +1,5 @@
+import { InputSchema, OutputSchema } from "@/app/(backend)/api/v1/inquire/route.type";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import {
-  InputSchema,
-  OutputSchema,
-} from "@/app/(backend)/api/v1/summarize/route.type";
 
 export async function POST(request: Request) {
   try {
