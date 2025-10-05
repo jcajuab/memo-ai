@@ -1,9 +1,8 @@
 import type { z } from "zod";
 import { OutputSchema } from "@/app/(backend)/api/v1/inquire/route.type";
+import { env } from "@/config/env";
 
 export type InquireResponse = z.infer<typeof OutputSchema>;
-
-const API_ENDPOINT = "/api/v1/inquire";
 
 /**
  * Ask AI questions based on a transcription
@@ -21,7 +20,7 @@ export async function inquireFromTranscription(
   }
 
   try {
-    const response = await fetch(API_ENDPOINT, {
+    const response = await fetch(env.apiUrl("/api/v1/inquire"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

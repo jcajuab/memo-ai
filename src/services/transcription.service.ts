@@ -1,9 +1,8 @@
 import type { z } from "zod";
 import { OutputSchema } from "@/app/(backend)/api/v1/transcribe/route.type";
+import { env } from "@/config/env";
 
 export type TranscriptionResponse = z.infer<typeof OutputSchema>;
-
-const API_ENDPOINT = "/api/v1/transcribe";
 
 /**
  * Upload an MP3 file for transcription using Cloudflare Workers AI
@@ -15,7 +14,7 @@ export async function transcribe(file: File): Promise<TranscriptionResponse> {
   }
 
   try {
-    const response = await fetch(API_ENDPOINT, {
+    const response = await fetch(env.apiUrl("/api/v1/transcribe"), {
       method: "POST",
       headers: {
         "Content-Type": "audio/mpeg",
