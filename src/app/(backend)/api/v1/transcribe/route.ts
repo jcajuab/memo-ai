@@ -2,8 +2,29 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { z } from "zod";
 
 // Schema for input validation
-const InputSchema = z.object({
+export const InputSchema = z.object({
   audio: z.array(z.number().int().min(0).max(255)).nonempty(),
+});
+
+// Schema for output validation
+const WordSchema = z.object({
+  word: z.string(),
+  start: z.number(),
+  end: z.number(),
+});
+
+const TranscriptionResponseSchema = z.object({
+  text: z.string(),
+  word_count: z.number(),
+  vtt: z.string(),
+  words: z.array(WordSchema),
+});
+
+export const OutputSchema = z.object({
+  input: z.object({
+    audio: z.array(z.number()).default([]),
+  }),
+  response: TranscriptionResponseSchema,
 });
 
 export async function POST(request: Request) {
@@ -26,7 +47,13 @@ export async function POST(request: Request) {
     // Run Whisper model
     const response = await env.AI.run("@cf/openai/whisper", input);
 
-    return Response.json({ input: { audio: [] }, response });
+    // Validate and return structured output
+    const output = OutputSchema.parse({
+      input: { audio: [] },
+      response,
+    });
+
+    return Response.json(output);
     
   } catch (err) {
     return new Response(
