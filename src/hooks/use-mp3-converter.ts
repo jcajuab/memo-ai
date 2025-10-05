@@ -1,40 +1,39 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
+import { useEffect, useRef, useState } from "react";
 
-interface ConversionResult {
+// Move regex to top level for performance
+const FILE_EXTENSION_REGEX = /\.[^.]+$/;
+
+type ConversionResult = {
   blob: Blob;
   fileName: string;
-}
+};
 
 export function useMp3Converter() {
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const [ready, setReady] = useState(false);
-  const [status, setStatus] = useState<string>("Select an audio file to convert to MP3.");
+  const [status, setStatus] = useState<string>(
+    "Select an audio file to convert to MP3."
+  );
 
   useEffect(() => {
-    let isMounted = true;
     const ffmpeg = new FFmpeg();
     ffmpegRef.current = ffmpeg;
 
-    void ffmpeg
+    ffmpeg
       .load()
       .then(() => {
-        if (isMounted) {
-          setReady(true);
-          setStatus("Upload or drop an audio file to begin.");
-        }
+        setReady(true);
+        setStatus("Upload or drop an audio file to begin.");
       })
       .catch((error) => {
-        if (isMounted) {
-          setStatus(`Failed to initialize FFmpeg: ${String(error)}`);
-        }
+        setStatus(`Failed to initialize FFmpeg: ${String(error)}`);
       });
 
     return () => {
-      isMounted = false;
       ffmpegRef.current = null;
     };
   }, []);
@@ -47,7 +46,7 @@ export function useMp3Converter() {
     }
 
     const inputName = file.name;
-    const baseName = inputName.replace(/\.[^.]+$/, "") || "audio";
+    const baseName = inputName.replace(FILE_EXTENSION_REGEX, "") || "audio";
     const outputName = `${baseName}.mp3`;
 
     setStatus("Encoding audio to MP3…");
@@ -64,7 +63,9 @@ export function useMp3Converter() {
     ]);
 
     const data = await ffmpeg.readFile(outputName);
-    const blob = new Blob([data], { type: "audio/mpeg" });
+    const blob = new Blob([data as unknown as ArrayBuffer], {
+      type: "audio/mpeg",
+    });
 
     await Promise.allSettled([
       ffmpeg.deleteFile(inputName),
